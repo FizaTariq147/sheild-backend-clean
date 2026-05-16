@@ -41,7 +41,7 @@ app.get("/", (req, res) => res.json({ ok: true }));
 // Error handler
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 7860;
 // const LAN_IP = "192.168.10.7";
 const LAN_IP = process.env.LAN_IP || "localhost";
 
