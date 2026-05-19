@@ -67,7 +67,7 @@ export const register = async (req, res) => {
     }
 
     // hash password for pending storage
-    const password_hash = await bcrypt.hash(password, 10);
+    const password_hash = await bcrypt.hash(password, 8);
 
     const pendingId = uuidv4();
     await createPending({
