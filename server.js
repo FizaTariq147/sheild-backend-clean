@@ -29,6 +29,19 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // Serve static uploads
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+app.get("/test-email", async (req, res) => {
+  try {
+    const { sendMail } = await import("./utils/mailer.js");
+    await sendMail({
+      to: "fizatariq953@gmail.com",
+      subject: "Test",
+      html: "<p>OTP mailer is working</p>",
+    });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 // Routes
 app.use("/api/users", userRouter);
 app.use("/api/contacts", contactRouter);
