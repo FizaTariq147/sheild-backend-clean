@@ -84,11 +84,12 @@ export const register = async (req, res) => {
     const expiresAt = new Date(Date.now() + ttl * MS);
     await createOtp({ target: email.toLowerCase(), code, type: "email_verif", expiresAt });
 
-    await sendMail({
-      to: email,
-      subject: "Verify your email",
-      html: `<p>Your verification code is <strong>${code}</strong>. It expires in ${ttl} seconds.</p>`
-    });
+ // ✅ Replace with this
+sendMail({
+  to: email,
+  subject: "Verify your email",
+  html: `<p>Your verification code is <strong>${code}</strong>. It expires in ${ttl} seconds.</p>`
+}).catch(err => console.error("sendMail failed:", err));
 
     return res.status(201).json({ message: "otp_sent", pendingId });
   } catch (error) {
