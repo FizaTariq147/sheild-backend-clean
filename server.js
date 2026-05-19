@@ -37,6 +37,7 @@ app.use("/api/chat", chatRoutes);
 
 // Health check
 app.get("/", (req, res) => res.json({ ok: true }));
+app.get("/health", (req, res) => res.json({ status: "ok" }));
 
 // Error handler
 app.use(errorHandler);
