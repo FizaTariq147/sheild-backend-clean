@@ -1,24 +1,36 @@
-import brevo from "@getbrevo/brevo";
+// mailer.js
+console.log("✅ BREVO MAILER LOADED");
 
 export const sendMail = async ({ to, subject, text, html }) => {
-  const apiInstance = new brevo.TransactionalEmailsApi();
+  const apiKey = process.env.BREVO_API_KEY;
 
-  apiInstance.setApiKey(
-    brevo.TransactionalEmailsApiApiKeys.apiKey,
-    process.env.BREVO_API_KEY
-  );
+  if (!apiKey) {
+    throw new Error("BREVO_API_KEY is not set in environment variables");
+  }
 
-  const email = new brevo.SendSmtpEmail();
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "api-key": apiKey,
+    },
+    body: JSON.stringify({
+      sender: {
+        name: "SHIELD App",
+        email: "fizatariq953@gmail.com", // must be verified in Brevo
+      },
+      to: [{ email: to }],
+      subject: subject,
+      htmlContent: html || `<p>${text}</p>`,
+      textContent: text || "",
+    }),
+  });
 
-  email.sender = {
-    name: "SHEILD App",
-    email: "fizatariq953@gmail.com", // must be verified in Brevo
-  };
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(`Brevo API error: ${JSON.stringify(error)}`);
+  }
 
-  email.to = [{ email: to }];
-  email.subject = subject;
-  email.htmlContent = html || `<p>${text}</p>`;
-  email.textContent = text || "";
-
-  await apiInstance.sendTransacEmail(email);
+  return await response.json();
 };
