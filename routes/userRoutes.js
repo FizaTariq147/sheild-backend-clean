@@ -19,6 +19,7 @@ import { authenticate } from "../libs/auth.js";
 // import { uploadAvatar } from "../middleware/uploadAvatar.js";
 import { User } from "../models/User.js";
 import redisClient from "../libs/redis.js";
+import { sendMail } from "../utils/mailer.js"
 
 const router = Router();
 
@@ -117,6 +118,19 @@ router.post("/online-status", authenticate, async (req, res) => {
     res.json(statuses);
   } catch (err) {
     console.error("[user.router] online-status:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/test-email", async (req, res) => {
+  try {
+    await sendMail({
+      to: "fizatariq953@gmail.com",
+      subject: "Test",
+      html: "<p>OTP mailer is working</p>",
+    });
+    res.json({ success: true });
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
