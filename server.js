@@ -71,4 +71,13 @@ app.set("io", io); // ← required so controllers can access io via req.app.get(
   }
 };
 
+// TEMP DEBUG — add this before your other routes
+app.get("/debug-mailer", async (req, res) => {
+  const fs = await import("fs");
+  const path = await import("path");
+  const mailerPath = path.join(process.cwd(), "utils", "mailer.js");
+  const content = fs.readFileSync(mailerPath, "utf8");
+  res.send(`<pre>${content}</pre>`);
+});
+
 start();
